@@ -11,7 +11,7 @@ class GoogleDriveProcessor
     raise ArgumentError, ':spreadsheet required for Google Drive source!' if spreadsheet.nil?
 
     # Deprecate :login & :password
-    unless options.slice(:login, :password).empty?
+    if !options[:login].nil? || !options[:password].nil?
       raise ArgumentError, 'login and password are deprecated. Use client_id and client_secret options'
     end
 
