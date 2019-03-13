@@ -10,7 +10,7 @@
         executable(_term, nesting + 1, lines)
       end
     else
-      lines << "#{indent}#{term.key}: \"#{term.translation.escape}\""
+      lines << "#{indent}#{term.key}: \"#{term.translation}\""
     end
 
     return lines.join("\n")

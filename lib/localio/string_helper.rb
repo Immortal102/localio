@@ -27,10 +27,6 @@ class String
         downcase
   end
 
-  def escape
-    self.dump[1..-2]
-  end
-
   def strip_tag
     self.gsub(/^[\[][a-z][\]]/, '')
   end
