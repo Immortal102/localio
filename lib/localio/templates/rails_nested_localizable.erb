@@ -10,7 +10,16 @@
         executable(_term, nesting + 1, lines)
       end
     else
-      lines << "#{indent}#{term.key}: \"#{term.translation}\""
+      if term.translation.is_a?(Array)
+        lines << "#{indent}#{term.key}:"
+        val_indent = indent + default_indent
+
+        term.translation.each do |val|
+          lines << "#{val_indent}- \"#{val}\""
+        end
+      else
+        lines << "#{indent}#{term.key}: \"#{term.translation}\""
+      end
     end
 
     return lines.join("\n")

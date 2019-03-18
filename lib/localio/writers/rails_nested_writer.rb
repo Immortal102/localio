@@ -5,11 +5,15 @@ require 'localio/formatter'
 
 class RailsNestedWriter
   DEFAULT_SEPARATOR = ' '.freeze
+  DEFAULT_A_VALUE_MATCHER = /^array\((?<array>.+)\)/.freeze
+  DEFAULT_A_VALUE_SPLITTER = ', '.freeze
 
   def self.write(languages, terms, path, formatter, options)
     puts 'Writing Rails YAML translations...'
 
     @nesting_separator = options[:separator] || DEFAULT_SEPARATOR
+    @array_value_matcher = options[:array_value_matcher] || DEFAULT_A_VALUE_MATCHER
+    @array_value_splitter = options[:array_value_splitter] || DEFAULT_A_VALUE_SPLITTER
     @key_formatter = formatter
     prepare_commented_terms!(terms)
 
@@ -53,7 +57,12 @@ class RailsNestedWriter
 
   def self.add_segment(key, translation, segments)
     k = Formatter.format(key, @key_formatter, method(:rails_key_formatter)) unless key.nil?
-    segment = Segment.new(k, translation, @lang)
+
+    a_matched = translation.to_s.match(@array_value_matcher)
+
+    trs = a_matched && a_matched[:array].split(@array_value_splitter) || translation
+
+    segment = Segment.new(k, trs, @lang, raw_translation: trs.is_a?(Array))
     segments << segment
     segment
   end
